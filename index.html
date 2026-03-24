@@ -829,23 +829,39 @@
   <!-- CDN으로 Supabase 불러오기 -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script>
+<!-- CDN으로 Supabase 불러오기 -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script type="module">
   // Supabase 초기화
-  const supabase = supabase.createClient(
-    'https://lfgpgakrucyyblakjxtd.supabase.co',  // Project URL
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmZ3BnYWtydWN5eWJsYWtqeHRkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDc5NjgsImV4cCI6MjA4OTkyMzk2OH0.YCfYcpLjFAyl7_7xb1IugYylaJdAg1EQmWbdAIIIctQ'                        // anon public 키
+  const supabaseClient = supabase.createClient(
+    'https://lfgpgakrucyyblakjxtd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmZ3BnYWtydWN5eWJsYWtqeHRkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDc5NjgsImV4cCI6MjA4OTkyMzk2OH0.YCfYcpLjFAyl7_7xb1IugYylaJdAg1EQmWbdAIIIctQ'
   );
 
   // 댓글 조회
-  const { data } = await supabase
+  const { data, error: fetchError } = await supabaseClient
     .from('comments')
     .select('*')
     .order('created_at', { ascending: false });
 
-  // 댓글 작성
-  await supabase
+  if (fetchError) {
+    console.error('댓글 조회 실패:', fetchError);
+  } else {
+    console.log('댓글 목록:', data);
+    // TODO: data를 DOM에 렌더링하는 로직 추가
+  }
+
+  // 댓글 작성 (예시)
+  const { error: insertError } = await supabaseClient
     .from('comments')
     .insert({ nickname: '홍길동', content: '안녕하세요!' });
+
+  if (insertError) {
+    console.error('댓글 작성 실패:', insertError);
+  } else {
+    console.log('댓글 작성 완료');
+  }
 </script>
 
   <footer>
